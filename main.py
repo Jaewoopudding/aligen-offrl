@@ -1,9 +1,29 @@
 import os
 import platform
+import warnings
+
+warnings.filterwarnings('ignore', category=DeprecationWarning)
+# Gym/numpy 내부 deprecation (e.g. rng.randn) 억제
+warnings.filterwarnings('ignore', category=DeprecationWarning, module='gym')
+warnings.filterwarnings('ignore', category=DeprecationWarning, module='numpy')
+warnings.filterwarnings('ignore', message='.*randn.*')
+# 서드파티 deprecation 억제 (Cython, wandb, gym, importlib 등)
+warnings.filterwarnings('ignore', category=DeprecationWarning, module='Cython')
+warnings.filterwarnings('ignore', category=DeprecationWarning, module='distutils')
+warnings.filterwarnings('ignore', category=DeprecationWarning, module='wandb')
+warnings.filterwarnings('ignore', message='.*load_module.*')
+warnings.filterwarnings('ignore', message='.*dep_util.*')
+warnings.filterwarnings('ignore', message='.*start_method.*')
+warnings.filterwarnings('ignore', message='.*app_url.*')
+warnings.filterwarnings('ignore', message='.*Scope\.user.*')
+warnings.filterwarnings('ignore', message='.*[Gg]ym has been unmaintained.*')
+warnings.filterwarnings('ignore', message='.*upgrade to Gymnasium.*')
+warnings.filterwarnings('ignore', category=UserWarning, module='wandb')
 
 import json
 import random
 import time
+from datetime import datetime
 
 import jax
 import numpy as np
@@ -43,13 +63,18 @@ flags.DEFINE_float('p_aug', None, 'Probability of applying image augmentation.')
 flags.DEFINE_integer('frame_stack', None, 'Number of frames to stack.')
 flags.DEFINE_integer('balanced_sampling', 0, 'Whether to use balanced sampling for online fine-tuning.')
 
-config_flags.DEFINE_config_file('agent', 'agents/fql.py', lock_config=False)
+config_flags.DEFINE_config_file('agent', 'agents/aligen.py', lock_config=False)
 
 
 def main(_):
+    # Load agent config first (used for run name).
+    config = FLAGS.agent
+
     # Set up logger.
-    exp_name = get_exp_name(FLAGS.seed)
-    setup_wandb(project='fql', group=FLAGS.run_group, name=exp_name)
+    # Run name format: algorithm_name_env_name_seed_YYYYMMDD_HHMMSS
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    exp_name = f'{config["agent_name"]}_{FLAGS.env_name}_{FLAGS.seed}_{timestamp}'
+    setup_wandb(project='aligen', group=FLAGS.run_group, name=exp_name)
 
     FLAGS.save_dir = os.path.join(FLAGS.save_dir, wandb.run.project, FLAGS.run_group, exp_name)
     os.makedirs(FLAGS.save_dir, exist_ok=True)
@@ -58,7 +83,6 @@ def main(_):
         json.dump(flag_dict, f)
 
     # Make environment and datasets.
-    config = FLAGS.agent
     env, eval_env, train_dataset, val_dataset = make_env_and_datasets(FLAGS.env_name, frame_stack=FLAGS.frame_stack)
     if FLAGS.video_episodes > 0:
         assert 'singletask' in FLAGS.env_name, 'Rendering is currently only supported for OGBench environments.'

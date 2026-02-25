@@ -169,6 +169,45 @@ python main.py --env_name=puzzle-4x4-play-singletask-task4-v0 --agent.alpha=1000
 python main.py --env_name=puzzle-4x4-play-singletask-task5-v0 --agent.alpha=1000
 ```
 
+#### Aligen on OGBench navigation tasks
+
+```bash
+# Aligen on OGBench antmaze-large-navigate-singletask-{task1, ..., task5}-v0
+python main.py --agent=agents/aligen.py --env_name=antmaze-large-navigate-singletask-task1-v0 --agent.q_agg=min --agent.alpha=10
+python main.py --agent=agents/aligen.py --env_name=antmaze-large-navigate-singletask-task2-v0 --agent.q_agg=min --agent.alpha=10
+python main.py --agent=agents/aligen.py --env_name=antmaze-large-navigate-singletask-task3-v0 --agent.q_agg=min --agent.alpha=10
+python main.py --agent=agents/aligen.py --env_name=antmaze-large-navigate-singletask-task4-v0 --agent.q_agg=min --agent.alpha=10
+python main.py --agent=agents/aligen.py --env_name=antmaze-large-navigate-singletask-task5-v0 --agent.q_agg=min --agent.alpha=10
+
+# Aligen on OGBench antmaze-giant-navigate-singletask-{task1, ..., task5}-v0
+python main.py --agent=agents/aligen.py --env_name=antmaze-giant-navigate-singletask-task1-v0 --agent.discount=0.995 --agent.q_agg=min --agent.alpha=10
+python main.py --agent=agents/aligen.py --env_name=antmaze-giant-navigate-singletask-task2-v0 --agent.discount=0.995 --agent.q_agg=min --agent.alpha=10
+python main.py --agent=agents/aligen.py --env_name=antmaze-giant-navigate-singletask-task3-v0 --agent.discount=0.995 --agent.q_agg=min --agent.alpha=10
+python main.py --agent=agents/aligen.py --env_name=antmaze-giant-navigate-singletask-task4-v0 --agent.discount=0.995 --agent.q_agg=min --agent.alpha=10
+python main.py --agent=agents/aligen.py --env_name=antmaze-giant-navigate-singletask-task5-v0 --agent.discount=0.995 --agent.q_agg=min --agent.alpha=10
+
+# Aligen on OGBench humanoidmaze-medium-navigate-singletask-{task1, ..., task5}-v0
+python main.py --agent=agents/aligen.py --env_name=humanoidmaze-medium-navigate-singletask-task1-v0 --agent.discount=0.995 --agent.alpha=30
+python main.py --agent=agents/aligen.py --env_name=humanoidmaze-medium-navigate-singletask-task2-v0 --agent.discount=0.995 --agent.alpha=30
+python main.py --agent=agents/aligen.py --env_name=humanoidmaze-medium-navigate-singletask-task3-v0 --agent.discount=0.995 --agent.alpha=30
+python main.py --agent=agents/aligen.py --env_name=humanoidmaze-medium-navigate-singletask-task4-v0 --agent.discount=0.995 --agent.alpha=30
+python main.py --agent=agents/aligen.py --env_name=humanoidmaze-medium-navigate-singletask-task5-v0 --agent.discount=0.995 --agent.alpha=30
+
+# Aligen on OGBench humanoidmaze-large-navigate-singletask-{task1, ..., task5}-v0
+python main.py --agent=agents/aligen.py --env_name=humanoidmaze-large-navigate-singletask-task1-v0 --agent.discount=0.995 --agent.alpha=30
+python main.py --agent=agents/aligen.py --env_name=humanoidmaze-large-navigate-singletask-task2-v0 --agent.discount=0.995 --agent.alpha=30
+python main.py --agent=agents/aligen.py --env_name=humanoidmaze-large-navigate-singletask-task3-v0 --agent.discount=0.995 --agent.alpha=30
+python main.py --agent=agents/aligen.py --env_name=humanoidmaze-large-navigate-singletask-task4-v0 --agent.discount=0.995 --agent.alpha=30
+python main.py --agent=agents/aligen.py --env_name=humanoidmaze-large-navigate-singletask-task5-v0 --agent.discount=0.995 --agent.alpha=30
+
+# Aligen on OGBench antsoccer-arena-navigate-singletask-{task1, ..., task5}-v0
+python main.py --agent=agents/aligen.py --env_name=antsoccer-arena-navigate-singletask-task1-v0 --agent.discount=0.995 --agent.alpha=10
+python main.py --agent=agents/aligen.py --env_name=antsoccer-arena-navigate-singletask-task2-v0 --agent.discount=0.995 --agent.alpha=10
+python main.py --agent=agents/aligen.py --env_name=antsoccer-arena-navigate-singletask-task3-v0 --agent.discount=0.995 --agent.alpha=10
+python main.py --agent=agents/aligen.py --env_name=antsoccer-arena-navigate-singletask-task4-v0 --agent.discount=0.995 --agent.alpha=10
+python main.py --agent=agents/aligen.py --env_name=antsoccer-arena-navigate-singletask-task5-v0 --agent.discount=0.995 --agent.alpha=10
+```
+
 #### FQL on pixel-based OGBench
 
 ```bash
