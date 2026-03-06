@@ -4,7 +4,7 @@
 # GPU당 하나의 프로세스만 실행.
 export MUJOCO_GL=egl
 SEEDS=(10 11 12 13)
-NUM_GPUS=6
+NUM_GPUS=8
 
 # 공통: job 리스트에 (ENV, ALPHA, TEMP, SEED) 추가
 append_jobs() {
