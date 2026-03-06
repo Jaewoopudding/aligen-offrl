@@ -26,6 +26,8 @@ FQL requires Python 3.9+ and is based on JAX. The main dependencies are
 `jax >= 0.4.26`, `ogbench == 1.1.0`, and `gymnasium == 0.29.1`.
 To install the full dependencies, simply run:
 ```bash
+conda create -n aligen python=3.11
+conda activate aligen
 pip install -r requirements.txt
 ```
 
