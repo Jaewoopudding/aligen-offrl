@@ -6,6 +6,9 @@ dist/
 .DS_Store
 .idea/
 .ruff_cache/
+
+wandb/
+exp/
 *.json
 *.csv
 *.pkl
