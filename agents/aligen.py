@@ -12,6 +12,60 @@ from utils.flax_utils import ModuleDict, TrainState, nonpytree_field
 from utils.networks import ActorVectorField, Value
 
 
+def get_adaptive_temp(actions, method, default_temp):
+    """Calculate adaptive temperature (2*h^2) using KDE bandwidth selection rules.
+    
+    Args:
+        actions: Mini-batch of actions (batch_size, action_dim).
+        method: 'fixed', 'silverman', 'silverman_iqr', or 'scott'.
+        default_temp: Fallback fixed temperature.
+        
+    Returns:
+        dict containing 'temp' and internal calculation metrics.
+    """
+    metrics = {}
+    
+    if method == 'fixed':
+        metrics['temp'] = default_temp
+        return metrics
+        
+    n_samples, action_dim = actions.shape
+    
+    # --- Compute dispersion metrics ---
+    std = jnp.std(actions, axis=0).mean()
+    metrics['std'] = std
+    std = jnp.maximum(std, 1e-4) # Prevent division by zero
+    
+    # Scale factor dependent on dimensionality
+    n_scale = n_samples ** (-1.0 / (action_dim + 4.0))
+    
+    # Default IQR metric
+    metrics['iqr'] = 0.0
+    
+    # --- Bandwidth selection ---
+    if method == 'silverman':
+        c = (4.0 / (action_dim + 2.0)) ** (1.0 / (action_dim + 4.0))
+        h = c * n_scale * std
+        
+    elif method == 'silverman_iqr':
+        q75 = jnp.percentile(actions, 75, axis=0)
+        q25 = jnp.percentile(actions, 25, axis=0)
+        iqr = jnp.mean(q75 - q25)
+        metrics['iqr'] = iqr
+        
+        A = jnp.minimum(std, iqr / 1.34)
+        A = jnp.maximum(A, 1e-4) # Prevent vanishing bandwidth
+        h = 0.9 * A * n_scale
+        
+    elif method == 'scott':
+        h = n_scale * std
+        
+    else:
+        h = jnp.sqrt(default_temp / 2.0)
+        
+    metrics['temp'] = 2.0 * (h ** 2)
+    return metrics
+
 class AligenAgent(flax.struct.PyTreeNode):
     """Aligen agent."""
 
@@ -19,7 +73,7 @@ class AligenAgent(flax.struct.PyTreeNode):
     network: Any
     config: Any = nonpytree_field()
 
-    def get_drift(self, pos, gen, state):
+    def get_drift(self, pos, gen, state, temp=None):
         n = gen.shape[0]
 
         dist_pos = jnp.sum((gen[:, None, :] - jax.lax.stop_gradient(pos)[None, :, :]) ** 2, axis=-1)
@@ -38,7 +92,7 @@ class AligenAgent(flax.struct.PyTreeNode):
             q = jnp.mean(qs)
             return q
 
-        nabla_q = jax.lax.stop_gradient(
+        nabla_q = jax.lax.stop_gradient( # critic에 대한 gradient. 
             jax.vmap(
                 jax.grad(q_fn),
                 in_axes=(0, 0),
@@ -49,7 +103,7 @@ class AligenAgent(flax.struct.PyTreeNode):
 
         def kernel_sum_fn(gen_):
             dist_gen_ = jnp.sum((gen_[:, None, :] - gen_[None, :, :]) ** 2, axis=-1)
-            kernel_matrix_ = jnp.exp(-dist_gen_ / self.config['temp'])
+            kernel_matrix_ = jnp.exp(-dist_gen_ / temp)
             return kernel_matrix_.sum()
 
         grad_k = jax.grad(kernel_sum_fn)(gen)
@@ -104,7 +158,14 @@ class AligenAgent(flax.struct.PyTreeNode):
         gen = gen.reshape(batch_size, gen_multiplier, action_dim)
         pos = batch['actions'][:, jnp.newaxis, :] 
 
-        drift_fn = jax.vmap(self.get_drift)
+        temp_metrics = get_adaptive_temp(
+            batch['actions'], 
+            method=self.config.get('temp_method', 'fixed'), 
+            default_temp=self.config.get('temp', 1.0)
+        )
+        temp = temp_metrics['temp']
+
+        drift_fn = jax.vmap(lambda p, g, s: self.get_drift(p, g, s, temp))
         drift, prior_score, nabla_q = drift_fn(pos, gen, batch['observations'])
 
         target_action = jax.lax.stop_gradient(gen + drift)
@@ -114,12 +175,19 @@ class AligenAgent(flax.struct.PyTreeNode):
         nabla_q_norm = jnp.linalg.norm(nabla_q, axis=-1).mean()
         gen_abs_mean = jnp.abs(gen).mean()
 
-        return drift_loss, {
+        info = {
             'drift_norm': jnp.linalg.norm(drift, axis=-1).mean(),
             'prior_score_norm': prior_score_norm,
             'nabla_q_norm': nabla_q_norm,
             'gen_abs_mean': gen_abs_mean,
+            'temp_bandwidth': temp, # Add temp variable to metrics
         }
+        
+        for k, v in temp_metrics.items():
+            if k != 'temp':
+                info[f'temp_{k}'] = v
+                
+        return drift_loss, info
 
     @jax.jit
     def total_loss(self, batch, grad_params, rng=None):
@@ -267,6 +335,7 @@ def get_config():
             q_agg='mean',  # Aggregation method for target Q values.
             alpha=10.0,  # BC coefficient (need to be tuned for each environment).
             temp=1.0,  # Temperature for the drift kernel.
+            temp_method='fixed',  # Adaptive temperature method: 'fixed', 'silverman', 'silverman_iqr', 'scott'
             gen_multiplier=8,  # Number of flow steps.
             encoder=ml_collections.config_dict.placeholder(str),  # Visual encoder name (None, 'impala_small', etc.).
         )

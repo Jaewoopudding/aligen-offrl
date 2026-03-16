@@ -1,5 +1,5 @@
 ogbench == 1.1.0
-jax[cuda12] == 0.7.1  # 0.8+ requires numpy>=2; 0.7.1 works with numpy 1.26 + d4rl.
+jax[cuda12] == 0.7.1  # 0.8+ requires numpy>=2; 0.7.1 works with numpy 1.26 + d4rl. (Requires Python 3.11+. Use 0.6.2 for Python 3.10.)
 flax >= 0.8.4
 distrax >= 0.1.5
 ml_collections
