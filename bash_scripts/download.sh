@@ -15,53 +15,53 @@ ENVS=(
   # "antmaze-large-diverse-v2"
 
   # OGBench antmaze-large navigate (tasks 1–5)
-  # "antmaze-large-navigate-singletask-task1-v0"
-  # "antmaze-large-navigate-singletask-task2-v0"
-  # "antmaze-large-navigate-singletask-task3-v0"
-  # "antmaze-large-navigate-singletask-task4-v0"
-  # "antmaze-large-navigate-singletask-task5-v0"
+  "antmaze-large-navigate-singletask-task1-v0"
+  "antmaze-large-navigate-singletask-task2-v0"
+  "antmaze-large-navigate-singletask-task3-v0"
+  "antmaze-large-navigate-singletask-task4-v0"
+  "antmaze-large-navigate-singletask-task5-v0"
 
   # OGBench antmaze-giant navigate (tasks 1–5)
-  # "antmaze-giant-navigate-singletask-task1-v0"
-  # "antmaze-giant-navigate-singletask-task2-v0"
-  # "antmaze-giant-navigate-singletask-task3-v0"
-  # "antmaze-giant-navigate-singletask-task4-v0"
-  # "antmaze-giant-navigate-singletask-task5-v0"
+  "antmaze-giant-navigate-singletask-task1-v0"
+  "antmaze-giant-navigate-singletask-task2-v0"
+  "antmaze-giant-navigate-singletask-task3-v0"
+  "antmaze-giant-navigate-singletask-task4-v0"
+  "antmaze-giant-navigate-singletask-task5-v0"
 
-  # # OGBench humanoidmaze-medium navigate (tasks 1–5)
-  # "humanoidmaze-medium-navigate-singletask-task1-v0"
-  # "humanoidmaze-medium-navigate-singletask-task2-v0"
-  # "humanoidmaze-medium-navigate-singletask-task3-v0"
-  # "humanoidmaze-medium-navigate-singletask-task4-v0"
-  # "humanoidmaze-medium-navigate-singletask-task5-v0"
+  # OGBench humanoidmaze-medium navigate (tasks 1–5)
+  "humanoidmaze-medium-navigate-singletask-task1-v0"
+  "humanoidmaze-medium-navigate-singletask-task2-v0"
+  "humanoidmaze-medium-navigate-singletask-task3-v0"
+  "humanoidmaze-medium-navigate-singletask-task4-v0"
+  "humanoidmaze-medium-navigate-singletask-task5-v0"
 
-  # # OGBench humanoidmaze-large navigate (tasks 1–5)
-  # "humanoidmaze-large-navigate-singletask-task1-v0"
-  # "humanoidmaze-large-navigate-singletask-task2-v0"
-  # "humanoidmaze-large-navigate-singletask-task3-v0"
-  # "humanoidmaze-large-navigate-singletask-task4-v0"
-  # "humanoidmaze-large-navigate-singletask-task5-v0"
+  # OGBench humanoidmaze-large navigate (tasks 1–5)
+  "humanoidmaze-large-navigate-singletask-task1-v0"
+  "humanoidmaze-large-navigate-singletask-task2-v0"
+  "humanoidmaze-large-navigate-singletask-task3-v0"
+  "humanoidmaze-large-navigate-singletask-task4-v0"
+  "humanoidmaze-large-navigate-singletask-task5-v0"
 
-  # # OGBench antsoccer-arena navigate (tasks 1–5)
-  # "antsoccer-arena-navigate-singletask-task1-v0"
-  # "antsoccer-arena-navigate-singletask-task2-v0"
-  # "antsoccer-arena-navigate-singletask-task3-v0"
-  # "antsoccer-arena-navigate-singletask-task4-v0"
-  # "antsoccer-arena-navigate-singletask-task5-v0"
+  # OGBench antsoccer-arena navigate (tasks 1–5)
+  "antsoccer-arena-navigate-singletask-task1-v0"
+  "antsoccer-arena-navigate-singletask-task2-v0"
+  "antsoccer-arena-navigate-singletask-task3-v0"
+  "antsoccer-arena-navigate-singletask-task4-v0"
+  "antsoccer-arena-navigate-singletask-task5-v0"
 
-#   # OGBench cube-single-play-singletask-{task1..5}-v0
-#   "cube-single-play-singletask-task1-v0"
-#   "cube-single-play-singletask-task2-v0"
-#   "cube-single-play-singletask-task3-v0"
-#   "cube-single-play-singletask-task4-v0"
-#   "cube-single-play-singletask-task5-v0"
+  # OGBench cube-single-play-singletask-{task1..5}-v0
+  "cube-single-play-singletask-task1-v0"
+  "cube-single-play-singletask-task2-v0"
+  "cube-single-play-singletask-task3-v0"
+  "cube-single-play-singletask-task4-v0"
+  "cube-single-play-singletask-task5-v0"
 
-#   # OGBench cube-double-play-singletask-{task1..5}-v0
-#   "cube-double-play-singletask-task1-v0"
-#   "cube-double-play-singletask-task2-v0"
-#   "cube-double-play-singletask-task3-v0"
-#   "cube-double-play-singletask-task4-v0"
-#   "cube-double-play-singletask-task5-v0"
+  # OGBench cube-double-play-singletask-{task1..5}-v0
+  "cube-double-play-singletask-task1-v0"
+   "cube-double-play-singletask-task2-v0"
+   "cube-double-play-singletask-task3-v0"
+   "cube-double-play-singletask-task4-v0"
+   "cube-double-play-singletask-task5-v0"
 
   # OGBench scene-play-singletask-{task1..5}-v0
   "scene-play-singletask-task1-v0"
@@ -83,6 +83,13 @@ ENVS=(
   "puzzle-4x4-play-singletask-task3-v0"
   "puzzle-4x4-play-singletask-task4-v0"
   "puzzle-4x4-play-singletask-task5-v0"
+
+  # OGBench visual (pixel-based) 5 envs used in visual.sh (task1 only)
+  "visual-cube-single-play-singletask-task1-v0"
+  "visual-cube-double-play-singletask-task1-v0"
+  "visual-scene-play-singletask-task1-v0"
+  "visual-puzzle-3x3-play-singletask-task1-v0"
+  "visual-puzzle-4x4-play-singletask-task1-v0"
 )
 
 # sweep할 alpha 값들 (원하는 대로 수정 가능)
